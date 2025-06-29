@@ -13,6 +13,30 @@ PROVIDER_DISPLAY_NAMES = {
 }
 
 # Predefined model names for common providers
+import os
+import logging
+import requests
+
+logger = logging.getLogger(__name__)
+
+def fetch_openrouter_models() -> list[str]:
+    """Fetch available models from OpenRouter API."""
+    endpoint = os.getenv("OPENROUTER_ENDPOINT", "https://openrouter.ai/api/v1")
+    url = f"{endpoint.rstrip('/')}/models"
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        return [m.get("id") for m in data.get("data", []) if m.get("id")]
+    except Exception as e:
+        logger.warning(f"Failed to fetch models from OpenRouter: {e}")
+        return [
+            "openai/gpt-4o",
+            "google/gemini-2.5-pro",
+            "mistralai/mistral-small-3.2-24b-instruct",
+        ]
+
+
 model_names = {
     "anthropic": ["claude-3-5-sonnet-20241022", "claude-3-5-sonnet-20240620", "claude-3-opus-20240229"],
     "openai": ["gpt-4o", "gpt-4", "gpt-3.5-turbo", "o3-mini"],
@@ -27,11 +51,7 @@ model_names = {
     "alibaba": ["qwen-plus", "qwen-max", "qwen-vl-max", "qwen-vl-plus", "qwen-turbo", "qwen-long"],
     "moonshot": ["moonshot-v1-32k-vision-preview", "moonshot-v1-8k-vision-preview"],
     "unbound": ["gemini-2.0-flash", "gpt-4o-mini", "gpt-4o", "gpt-4.5-preview"],
-    "openrouter": [
-        "openai/gpt-4o",
-        "google/gemini-2.5-pro",
-        "mistralai/mistral-small-3.2-24b-instruct",
-    ],
+    "openrouter": fetch_openrouter_models(),
     "grok": [
         "grok-3",
         "grok-3-fast",

@@ -17,11 +17,19 @@ def update_model_dropdown(llm_provider):
     Update the model name dropdown with predefined models for the selected provider.
     """
     # Use predefined models for the selected provider
+    if llm_provider == "openrouter":
+        models = config.fetch_openrouter_models()
+        config.model_names[llm_provider] = models
     if llm_provider in config.model_names:
-        return gr.Dropdown(choices=config.model_names[llm_provider], value=config.model_names[llm_provider][0],
-                           interactive=True)
+        models = config.model_names[llm_provider]
+        return gr.Dropdown(
+            choices=models,
+            value=models[0] if models else "",
+            interactive=True,
+            filterable=True,
+        )
     else:
-        return gr.Dropdown(choices=[], value="", interactive=True, allow_custom_value=True)
+        return gr.Dropdown(choices=[], value="", interactive=True, allow_custom_value=True, filterable=True)
 
 
 async def update_mcp_server(mcp_file: str, webui_manager: WebuiManager):
@@ -74,6 +82,7 @@ def create_agent_settings_tab(webui_manager: WebuiManager):
                 value=config.model_names[os.getenv("DEFAULT_LLM", "openai")][0],
                 interactive=True,
                 allow_custom_value=True,
+                filterable=True,
                 info="Select a model in the dropdown options or directly type a custom model name"
             )
         with gr.Row():
@@ -131,6 +140,7 @@ def create_agent_settings_tab(webui_manager: WebuiManager):
                 label="Planner LLM Model Name",
                 interactive=True,
                 allow_custom_value=True,
+                filterable=True,
                 info="Select a model in the dropdown options or directly type a custom model name"
             )
         with gr.Row():
