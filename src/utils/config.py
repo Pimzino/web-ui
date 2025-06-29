@@ -9,6 +9,7 @@ PROVIDER_DISPLAY_NAMES = {
     "unbound": "Unbound AI",
     "ibm": "IBM",
     "grok": "Grok",
+    "openrouter": "OpenRouter",
 }
 
 # Predefined model names for common providers
@@ -26,6 +27,11 @@ model_names = {
     "alibaba": ["qwen-plus", "qwen-max", "qwen-vl-max", "qwen-vl-plus", "qwen-turbo", "qwen-long"],
     "moonshot": ["moonshot-v1-32k-vision-preview", "moonshot-v1-8k-vision-preview"],
     "unbound": ["gemini-2.0-flash", "gpt-4o-mini", "gpt-4o", "gpt-4.5-preview"],
+    "openrouter": [
+        "openai/gpt-4o",
+        "google/gemini-2.5-pro",
+        "mistralai/mistral-small-3.2-24b-instruct",
+    ],
     "grok": [
         "grok-3",
         "grok-3-fast",
